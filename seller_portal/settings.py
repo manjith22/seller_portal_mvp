@@ -2,22 +2,29 @@ from pathlib import Path
 import os
 import dj_database_url
 from environ import Env
+
 env = Env()
 Env.read_env()
-ENVIRONMENT = env('ENVIRONMENT',default='production')
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = env('SECRET_KEY')
-ENCRYPT_KEY= env('ENCRYPT_KEY')
 
-#if ENVIRONMENT == 'developmet':
- #   DEBUG = True
-#else:
-DEBUG = False
+ENVIRONMENT = env('ENVIRONMENT', default='production')
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','HTTPS://sellergooys.up.railway.app']
-CSRF_TRUSTED_ORIGINS =['HTTPS://sellergooys.up.railway.app']
+SECRET_KEY = env('SECRET_KEY', default='unsafe-secret-key')
+ENCRYPT_KEY = env('ENCRYPT_KEY', default='unsafe-encrypt-key')
+
+DEBUG = env.bool('DEBUG', default=False)
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'sellergooys.up.railway.app',
+    '.railway.app',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://sellergooys.up.railway.app',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -27,12 +34,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'orders',
-    'admin_honeypot',
+    # 'admin_honeypot',  # keep commented unless installed properly
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -60,15 +67,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'seller_portal.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if ENVIRONMENT == 'production':
+    DATABASES = {
+        'default': dj_database_url.parse(env('DATABASE_URL'))
     }
-}
-POSTGRES_LOCALLY = False
-if ENVIRONMENT == 'production' or POSTGRES_LOCALLY == True:
-    DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = []
 
@@ -78,20 +87,17 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# Uncomment only if you actually create a static folder
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ACCOUNT_USERNAME_BLACKLIST = ['moyalali']
-
-
-
-
-
