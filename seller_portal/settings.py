@@ -14,7 +14,7 @@ ENCRYPT_KEY= env('ENCRYPT_KEY')
 #if ENVIRONMENT == 'developmet':
  #   DEBUG = True
 #else:
-    DEBUG = False
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS =['HTTPS://sellergooys.up.railway.app']
