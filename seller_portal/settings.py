@@ -11,9 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 ENCRYPT_KEY= env('ENCRYPT_KEY')
 
-if ENVIRONMENT == 'developmet':
-    DEBUG = True
-else:
+#if ENVIRONMENT == 'developmet':
+ #   DEBUG = True
+#else:
     DEBUG = False
 
 ALLOWED_HOSTS = ['*']
