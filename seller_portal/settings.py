@@ -17,7 +17,7 @@ ENCRYPT_KEY= env('ENCRYPT_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS =['HTTPS://sellergooys.up.railway.app']
+CSRF_TRUSTED_ORIGINS =['localhost','127.0.0.1','HTTPS://sellergooys.up.railway.app']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
