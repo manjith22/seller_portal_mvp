@@ -1,0 +1,31 @@
+{% extends 'orders/base.html' %}
+{% block content %}
+<h1>Create Order</h1>
+<div class="card narrow">
+  <form method="post">
+    {% csrf_token %}
+    {% if user.is_staff %}
+    <label>Seller</label>
+    <select name="seller_id" required>
+      <option value="">Choose seller</option>
+      {% for s in sellers %}
+      <option value="{{ s.id }}">{{ s.display_name }} ({{ s.seller_code }})</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+    {{ form.as_p }}
+    <button type="submit">Save Order</button>
+  </form>
+</div>
+
+{% if duplicate_phones %}
+<div class="card">
+  <h2>Possible duplicate phone matches</h2>
+  <ul>
+    {% for item in duplicate_phones %}
+      <li>{{ item.order_id }} - {{ item.customer_name }} - {{ item.phone }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'orders/base.html' %}
+{% block content %}
+<h1>Orders</h1>
+<div class="card">
+  <form method="get" class="filters">
+    {% if user.is_staff %}
+    <select name="seller">
+      <option value="">All sellers</option>
+      {% for s in sellers %}
+      <option value="{{ s.seller_code }}">{{ s.display_name }} ({{ s.seller_code }})</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+    <select name="status">
+      <option value="">All status</option>
+      <option value="PENDING">Pending</option>
+      <option value="SHIPPED">Shipped</option>
+      <option value="DELIVERED">Delivered</option>
+      <option value="RTO">RTO</option>
+      <option value="CANCELLED">Cancelled</option>
+    </select>
+    <select name="payment">
+      <option value="">All payment</option>
+      <option value="COD">COD</option>
+      <option value="PREPAID">Prepaid</option>
+    </select>
+    <input type="date" name="start_date">
+    <input type="date" name="end_date">
+    <button type="submit">Filter</button>
+  </form>
+</div>
+
+<div class="card table-wrap">
+  <table>
+    <tr>
+      <th>Order ID</th><th>Date</th><th>Seller</th><th>Name</th><th>Phone</th><th>Product</th><th>Amount</th><th>Payment</th><th>Status</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+      <td>{{ order.order_id }}</td>
+      <td>{{ order.order_date }}</td>
+      <td>{{ order.seller.seller_code }}</td>
+      <td>{{ order.customer_name }}</td>
+      <td>{{ order.phone }}</td>
+      <td>{{ order.product }}</td>
+      <td>₹{{ order.amount }}</td>
+      <td>{{ order.payment_type }}</td>
+      <td>{{ order.status }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="9">No orders found</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

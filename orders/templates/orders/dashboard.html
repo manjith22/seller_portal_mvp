@@ -1,0 +1,73 @@
+{% extends 'orders/base.html' %}
+{% block content %}
+<h1>{% if user.is_staff %}Admin Dashboard{% else %}Seller Dashboard{% endif %}</h1>
+<div class="grid four">
+  <div class="card stat"><h3>Total Orders</h3><p>{{ totals.total_orders|default:0 }}</p></div>
+  <div class="card stat"><h3>Total Revenue</h3><p>₹{{ totals.total_amount|default:0 }}</p></div>
+  <div class="card stat"><h3>Today's Orders</h3><p>{{ today_totals.today_orders|default:0 }}</p></div>
+  <div class="card stat"><h3>Today's Revenue</h3><p>₹{{ today_totals.today_amount|default:0 }}</p></div>
+</div>
+
+<div class="grid two">
+  <div class="card">
+    <h2>By Status</h2>
+    <table>
+      <tr><th>Status</th><th>Total</th></tr>
+      {% for row in by_status %}
+      <tr><td>{{ row.status }}</td><td>{{ row.total }}</td></tr>
+      {% empty %}
+      <tr><td colspan="2">No data</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="card">
+    <h2>By Payment</h2>
+    <table>
+      <tr><th>Payment</th><th>Total</th></tr>
+      {% for row in by_payment %}
+      <tr><td>{{ row.payment_type }}</td><td>{{ row.total }}</td></tr>
+      {% empty %}
+      <tr><td colspan="2">No data</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% if seller_totals %}
+<div class="card">
+  <h2>Seller Performance</h2>
+  <table>
+    <tr><th>Seller</th><th>Code</th><th>Orders</th><th>Revenue</th></tr>
+    {% for row in seller_totals %}
+    <tr>
+      <td>{{ row.seller__display_name }}</td>
+      <td>{{ row.seller__seller_code }}</td>
+      <td>{{ row.total_orders }}</td>
+      <td>₹{{ row.total_amount|default:0 }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No seller data</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Recent Orders</h2>
+  <table>
+    <tr><th>Order ID</th><th>Name</th><th>Seller</th><th>Product</th><th>Amount</th><th>Status</th></tr>
+    {% for order in recent_orders %}
+    <tr>
+      <td>{{ order.order_id }}</td>
+      <td>{{ order.customer_name }}</td>
+      <td>{{ order.seller.seller_code }}</td>
+      <td>{{ order.product }}</td>
+      <td>₹{{ order.amount }}</td>
+      <td>{{ order.status }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">No orders yet</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

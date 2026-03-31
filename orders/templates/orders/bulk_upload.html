@@ -1,0 +1,17 @@
+{% extends 'orders/base.html' %}
+{% block content %}
+<h1>Bulk Upload Orders</h1>
+<div class="card narrow">
+  <p>Upload CSV or Excel with your daily orders.</p>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+  </form>
+</div>
+<div class="card">
+  <h2>Recommended columns</h2>
+  <p>Name, Full Address, City, State, Pincode, Phone, Product, Amount, Tag, Payment Type, Status, Date</p>
+  <p>Admin can also include <strong>seller_code</strong> in the file.</p>
+</div>
+{% endblock %}
